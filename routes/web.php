@@ -31,4 +31,5 @@ Route::group(['prefix' => 'service'],function(){
 	Route::post('login', 'Service\MemberController@login');
 
 	Route::get('category/parent_id/{parent_id}','Service\ProductController@getCategoryByParentId');//{}->controller的输入参数
+	Route::get('cart/add/{product_id}', 'Service\CartController@addCart');
 });
