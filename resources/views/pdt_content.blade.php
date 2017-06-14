@@ -98,7 +98,9 @@
         console.log(error);
       }
     });
-
+  }
+  function _toCart() {
+    location.href = '/cart';
   }
 
 </script>
