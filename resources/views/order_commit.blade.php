@@ -27,7 +27,7 @@
 	            <div class="weui_cell_bd weui_cell_primary">
 	                <select class="weui_select" name="payway">
 	                    <option selected="" value="1">支付宝</option>
-	                    <option value="2">微信</option>
+	                    <option value="2">银行</option>
 	                </select>
 	            </div>
 	    	</div>
@@ -35,9 +35,9 @@
 
 	    <form action="/service/alipay" id="alipay" method="post">
 	      {{ csrf_field() }}
-	      <input type="hidden" name="total_price" value="" />
-	      <input type="hidden" name="name" value="" />
-	      <input type="hidden" name="order_no" value="" />
+	      <input type="hidden" name="total_price" value="{{ $total_price }}" />
+	      <input type="hidden" name="name" value="{{ $name }}" />
+	      <input type="hidden" name="order_no" value="{{ $order_no }}" />
 	    </form>
 
 	    <div class="weui_cells">
@@ -59,6 +59,14 @@
 
 @section('my-js')
 <script type="text/javascript">
+	function _onPay()
+	{
+		var payway = $('.weui_select option:selected').val();
+		if(payway == '1'){
+			$('#alipay').submit();
+			return;
+		}
+	}
 
 
 </script>

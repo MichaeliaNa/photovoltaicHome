@@ -30,17 +30,20 @@ class PayController extends Controller
 
     //**req_data详细信息**
 
-    //服务器异步通知页面路径 =====回调地址======
+    //服务器异步通知页面路径 =====回调地址======服务器突然断了，支付宝直到返回success
     $notify_url = "http://" . $_SERVER['HTTP_HOST'] . '/service/pay/ali_notify';
+    //$notify_url = "http://alipa.m3app.cn/wappay/notify_url.php";
     //需http://格式的完整路径，不允许加?id=123这类自定义参数
 
     //页面跳转同步通知页面路径
     $call_back_url = "http://" . $_SERVER['HTTP_HOST'] . '/service/pay/ali_result';
+    //$call_back_url = "http://alipa.m3app.cn/wappay/call_back_url.php";
     //需http://格式的完整路径，不允许加?id=123这类自定义参数
     //http://127.0.0.1:8800/WS_WAP_PAYWAP-PHP-UTF-8/call_back_url.php
 
     //操作中断返回地址
     $merchant_url = "http://" . $_SERVER['HTTP_HOST'] . '/service/pay/ali_merchant';
+    //$merchant_url = "http://alipa.m3app.cn/wappay/merchant_url.php";
     //用户付款中途退出返回商户的地址。需http://格式的完整路径，不允许加?id=123这类自定义参数
 
     //卖家支付宝帐户
@@ -145,18 +148,18 @@ class PayController extends Controller
     		//交易状态
     		$trade_status = $doc->getElementsByTagName( "trade_status" )->item(0)->nodeValue;
 
-    		if($trade_status == 'TRADE_FINISHED') {
-          Log::info('支付完成');
+    	if($trade_status == 'TRADE_FINISHED') {
+          Log::info('支付完成');//还要加入支付地址，订单号等详细信息
     			echo "success";		//请不要修改或删除
-    		}
-    		else if ($trade_status == 'TRADE_SUCCESS') {
-          // 修改用户的订单状态
-          Log::info('支付成功');
-          $order = Order::where('order_no', $out_trade_no)->first();
-          $order->status = 2;
-          $order->save();
+    	}
+    	else if ($trade_status == 'TRADE_SUCCESS') {
+              // 修改用户的订单状态
+              Log::info('支付成功');
+              $order = Order::where('order_no', $out_trade_no)->first();
+              $order->status = 2;
+              $order->save();
 
-    			echo "success";		//请不要修改或删除
+    		  echo "success";		//请不要修改或删除
     		}
     	}
     }
@@ -166,92 +169,48 @@ class PayController extends Controller
         echo "fail";
     }
   }
-
-  public function aliResult() {
-
+  public function aliResult()
+  {
     require_once(app_path() . "/Tool/alipay/alipay.config.php");
     require_once(app_path() . "/Tool/alipay/lib/alipay_notify.class.php");
-
-    //计算得出通知验证结果
-    $alipayNotify = new \AlipayNotify($alipay_config);
+    $alipayNotify = new AlipayNotify($alipay_config);
     $verify_result = $alipayNotify->verifyReturn();
     if($verify_result) {//验证成功
-    	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    	//请在这里加上商户的业务逻辑程序代码
-
-    	//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //请在这里加上商户的业务逻辑程序代码
+        
+        //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表
 
-    	//商户订单号
-    	$out_trade_no = $_GET['out_trade_no'];
+        //商户订单号
+        $out_trade_no = $_GET['out_trade_no'];
 
-    	//支付宝交易号
-    	$trade_no = $_GET['trade_no'];
+        //支付宝交易号
+        $trade_no = $_GET['trade_no'];
 
-    	//交易状态
-    	$result = $_GET['result'];
+        //交易状态
+        $result = $_GET['result'];
 
 
-    	//判断该笔订单是否在商户网站中已经做过处理
-    		//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-    		//如果有做过处理，不执行商户的业务程序
+        //判断该笔订单是否在商户网站中已经做过处理
+            //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+            //如果有做过处理，不执行商户的业务程序
+            
+        return "验证成功<br />";
 
-    	return "验证成功";
-
-    	//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-
-    	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
     else {
-      //验证失败
-      //如要调试，请看alipay_notify.php页面的verifyReturn函数
-      return "验证失败";
+        //验证失败
+        //如要调试，请看alipay_notify.php页面的verifyReturn函数
+        return "验证失败";
     }
   }
-
 
   public function aliMerchant() {
 
     return view('alipay.merchant_url');
-  }
-
-  public function wxPay(Request $request) {
-    $openid = $request->session()->get('openid', '');
-    if($openid == '') {
-      $m3_result = new M3Result;
-      $m3_result->status = 1;
-      $m3_result->message = 'Session已过期, 请重新提交订单';
-
-      return $m3_result;
-    }
-
-    return WXTool::wxPayData($request->input('name'), $request->input('order_no'), 1, $openid);
-  }
-
-  public function wxNotify() {
-    Log::info('微信支付回调开始');
-    $return_data = file_get_contents("php://input");
-    Log::info('return_data: '.$return_data);
-
-    libxml_disable_entity_loader(true);
-    $data = simplexml_load_string($return_data, 'SimpleXMLElement', LIBXML_NOCDATA);
-
-    Log::info('return_code: '.$data->return_code);
-    if($data->return_code == 'SUCCESS') {
-      $order = Order::where('order_no', $data->out_trade_no)->first();
-      $order->status = 2;
-      $order->save();
-
-      return "<xml>
-                <return_code><![CDATA[SUCCESS]]></return_code>
-                <return_msg><![CDATA[OK]]></return_msg>
-              </xml>";
-    }
-
-    return "<xml>
-              <return_code><![CDATA[FAIL]]></return_code>
-              <return_msg><![CDATA[FAIL]]></return_msg>
-            </xml>";
-
   }
 }

@@ -28,7 +28,7 @@ Route::get('/pay',function(){
 });
 
 Route::group(['middleware' => 'check.login'],function(){
-	Route::get('/order_commit/{product_ids}', 'View\OrderController@toOrderCommit');
+	Route::post('/order_commit', 'View\OrderController@toOrderCommit');
 	Route::get('/order_list', 'View\OrderController@toOrderList');
 });
 
@@ -42,6 +42,8 @@ Route::group(['prefix' => 'service'],function(){
 	Route::get('category/parent_id/{parent_id}','Service\ProductController@getCategoryByParentId');//{}->controller的输入参数
 	Route::get('cart/add/{product_id}', 'Service\CartController@addCart');
 	Route::get('cart/delete', 'Service\CartController@deleteCart');
-	Route::post('/pay', 'Service\PayController@alipay');
-	Route::post('/pay/notify', 'Service\PayController@notify');
+	Route::post('/alipay', 'Service\PayController@alipay');
+	Route::post('/pay/ali_notify', 'Service\PayController@aliNotify');
+	Route::get('/pay/ali_result', 'Service\PayController@aliResult');
+	Route::get('/pay/ali_merchant', 'Service\PayController@aliMerchant');
 });
