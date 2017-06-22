@@ -5,8 +5,10 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
    <meta name="csrf-token" content="{{ csrf_token() }}" />
 	<title>@yield('title')</title>
-	<link rel="stylesheet" href="/css/weui.css">
+{{-- 	<link rel="stylesheet" href="/css/weui.css">
 	<link rel="stylesheet" href="/css/book.css">
+  <link rel="stylesheet" href="/css/swipe.css"> --}}
+  <link rel="stylesheet" href="/build/book.min.css">
 </head>
 <body>
 <div class="bk_title_bar">
@@ -40,9 +42,13 @@
 
 </body>
 
-<script src="/js/jquery-1.11.2.min.js"></script>
+{{-- <script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/swipe.min.js" charset="utf-8"></script>
+<script src="/js/book.js"></script> --}}
 
-<script type="text/javascript">
+<script src="/build/book.min.js" charset="utf-8"></script>
+
+{{-- <script type="text/javascript">
 function hideActionSheet(weuiActionsheet, mask) {
     weuiActionsheet.removeClass('weui_actionsheet_toggle');
     mask.removeClass('weui_fade_toggle');
@@ -84,7 +90,7 @@ function onMenuItemClick(index) {
 }
 //标题栏和标题保持一致
 $('.bk_title_content').html(document.title);
-</script>
+</script> --}}
 
 @yield('my-js')
 </html>

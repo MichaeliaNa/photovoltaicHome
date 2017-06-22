@@ -13,9 +13,30 @@
     "axios": "^0.15.3",
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.3",
+    "gulp": "^3.9.1",
     "jquery": "^3.1.1",
     "laravel-mix": "0.*",
     "lodash": "^4.17.4",
     "vue": "^2.1.10"
-  }
+  },
+  "name": "photovoltaichome",
+  "description": "This is an E-commercial Web App for PhotovoltaicHome. #(login&register)(product display) #(shopping cart 1)",
+  "version": "1.0.0",
+  "main": "webpack.mix.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichaeliaNa/photovoltaicHome.git"
+  },
+  "keywords": [
+    "E-commercial"
+  ],
+  "author": "Na (Nina)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MichaeliaNa/photovoltaicHome/issues"
+  },
+  "homepage": "https://github.com/MichaeliaNa/photovoltaicHome#readme"
 }

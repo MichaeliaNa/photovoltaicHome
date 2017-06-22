@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         '/service/pay/ali_notify',
-        '/service/pay/ali_result'
+        '/service/pay/ali_result',
+        '/service/upload/images'
     ];
 }

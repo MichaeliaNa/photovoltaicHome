@@ -10,6 +10,7 @@ class MemberController extends Controller
   public function toLogin(Request $request)
   {
   	$return_url = $request->input('return_url','');
+  	//return $return_url;
     return view('login')->with('return_url',urldecode($return_url));
   }
 

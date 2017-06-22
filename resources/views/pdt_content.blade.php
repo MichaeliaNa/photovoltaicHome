@@ -1,7 +1,6 @@
 @extends('master')
 @section('title',$product-> name) <!--blade模版不用加双花括号,  但在标签里面要加-->
 @section('content')
-<link rel="stylesheet" href="/css/swipe.css" >
 <div class="page bk_content" style="top: 0;">
       <div class="addWrap">
         <div class="swipe" id="mySwipe">
@@ -52,7 +51,6 @@
 @endsection
 
 @section('my-js')
-<script src="/js/swipe.min.js" charset="utf-8"></script>
 <script type="text/javascript">
   var bullets = document.getElementById('position').getElementsByTagName('li');
   Swipe(document.getElementById('mySwipe'), {
